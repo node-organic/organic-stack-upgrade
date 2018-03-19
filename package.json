@@ -1,0 +1,39 @@
+{
+  "name": "organic-stack-upgrade",
+  "description": "lib for upgrading organic stem skeletons",
+  "version": "1.0.0",
+  "dependencies": {
+    "array-uniq": "^1.0.3",
+    "async": "^2.6.0",
+    "fs-extra": "^5.0.0",
+    "glob-stream": "^6.1.0",
+    "inquirer": "^5.1.0",
+    "istextorbinary": "^2.2.1",
+    "merge-util": "^0.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^4.18.2",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.9.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.7.0",
+    "eslint-plugin-standard": "^3.0.1"
+  },
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/node-organic/organic-stack-upgrade.git"
+  },
+  "author": "Boris Filipov",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/node-organic/organic-stack-upgrade/issues"
+  },
+  "homepage": "https://github.com/node-organic/organic-stack-upgrade#readme"
+}

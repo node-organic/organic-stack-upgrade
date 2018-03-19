@@ -6,7 +6,7 @@ lib for upgrading organic stem skeletons
 
 ```
 let stack = new StackUpgrade({
-  targetDir: process.cwd(),
+  destDir: process.cwd(),
   name: 'myStack',
   version: '1.0.0'
 })

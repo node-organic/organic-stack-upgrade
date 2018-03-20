@@ -15,16 +15,28 @@ module.exports = class StackUpgrade {
     this.name = name
     this.version = version
   }
-  async configure ({sourceDir}) {
+  async configure ({sourceDir, answers}) {
     let placeholders = await collectPlaceholders({sourceDir})
-    return collectAnswers({placeholders})
+    // figure out placeholders which has already answers provided
+    let result = Object.assign({}, answers)
+    for (let i = 0; i < placeholders.length; i++) {
+      if (result[placeholders[i]]) {
+        placeholders.splice(i, 1)
+        i -= 1
+      }
+    }
+    // ask only for answers about missing placeholders if any
+    if (placeholders.length) {
+      Object.assign(result, collectAnswers({placeholders}))
+    }
+    return result
   }
   async merge ({sourceDir, answers = {}}) {
     let destDir = this.destDir
     await mergeDirectory({sourceDir, destDir, answers})
   }
-  async configureAndMerge ({sourceDir}) {
-    let answers = await this.configure({sourceDir})
+  async configureAndMerge ({sourceDir, providedAnswers}) {
+    let answers = await this.configure({sourceDir, answers: providedAnswers})
     return this.merge({sourceDir, answers})
   }
   async updateJSON () {
@@ -34,8 +46,8 @@ module.exports = class StackUpgrade {
     json['stackUpgrades'][this.name] = this.version
     return writejson(jsonfilepath, json)
   }
-  async configureMergeAndUpdateJSON ({sourceDir}) {
-    await this.configureAndMerge({sourceDir})
+  async configureMergeAndUpdateJSON ({sourceDir, answers}) {
+    await this.configureAndMerge({sourceDir, answers})
     await this.updateJSON()
   }
 }

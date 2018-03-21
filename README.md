@@ -29,6 +29,7 @@ Configures stack upgrade. This method does the following:
 placeholders such as `{{{variable-name}}}` within file contents or file/directory paths
 2. uses `answers` hash to provide values for found placeholders
 3. prompts the user via `inquirer` to provide any missing answers to placeholders found from step 1
+4. returns all placeholders with their respective answer values as `result_answers` hash
 
 ### merge({sourceDir, answers})
 

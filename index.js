@@ -18,26 +18,26 @@ module.exports = class StackUpgrade {
   async configure ({sourceDir, answers}) {
     let placeholders = await collectPlaceholders({sourceDir})
     // figure out placeholders which has already answers provided
-    let result = Object.assign({}, answers)
+    let result_answers = Object.assign({}, answers)
     for (let i = 0; i < placeholders.length; i++) {
-      if (result[placeholders[i]]) {
+      if (result_answers[placeholders[i]]) {
         placeholders.splice(i, 1)
         i -= 1
       }
     }
     // ask only for answers about missing placeholders if any
     if (placeholders.length) {
-      Object.assign(result, collectAnswers({placeholders}))
+      Object.assign(result_answers, collectAnswers({placeholders}))
     }
-    return result
+    return result_answers
   }
-  async merge ({sourceDir, answers = {}}) {
+  async merge ({sourceDir, answers}) {
     let destDir = this.destDir
     await mergeDirectory({sourceDir, destDir, answers})
   }
-  async configureAndMerge ({sourceDir, providedAnswers}) {
-    let answers = await this.configure({sourceDir, answers: providedAnswers})
-    return this.merge({sourceDir, answers})
+  async configureAndMerge ({sourceDir, answers}) {
+    let all_answers = await this.configure({sourceDir, answers})
+    return this.merge({sourceDir, all_answers})
   }
   async updateJSON () {
     let jsonfilepath = path.join(this.destDir, 'package.json')

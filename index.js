@@ -37,7 +37,7 @@ module.exports = class StackUpgrade {
   }
   async configureAndMerge ({sourceDir, answers}) {
     let all_answers = await this.configure({sourceDir, answers})
-    return this.merge({sourceDir, all_answers})
+    return this.merge({sourceDir, answers: all_answers})
   }
   async updateJSON () {
     let jsonfilepath = path.join(this.destDir, 'package.json')

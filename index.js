@@ -27,7 +27,7 @@ module.exports = class StackUpgrade {
     }
     // ask only for answers about missing placeholders if any
     if (placeholders.length) {
-      Object.assign(result_answers, collectAnswers({placeholders}))
+      Object.assign(result_answers, await collectAnswers({placeholders}))
     }
     return result_answers
   }

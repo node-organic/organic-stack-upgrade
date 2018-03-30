@@ -1,7 +1,7 @@
 {
   "name": "organic-stack-upgrade",
   "description": "lib for upgrading organic stem skeletons",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "dependencies": {
     "array-uniq": "^1.0.3",
     "async": "^2.6.0",
@@ -25,7 +25,10 @@
     "lib": "lib"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "release-patch": "npm run test && npm version patch && npm publish && git push --tags && git push origin master",
+    "release-minor": "npm run test && npm version minor && npm publish && git push --tags && git push origin master",
+    "release-major": "npm run test && npm version major && npm publish && git push --tags && git push origin master"
   },
   "repository": {
     "type": "git",

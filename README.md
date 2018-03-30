@@ -46,14 +46,14 @@ file/directory path or file contents
 
 Updates `<destDir>/package.json` by adding stack upgrade `name` and `version` within `stackUpgrades` key. This is useful way to record that given stack upgrade by name/version has been applied to the `destDir`
 
-### configureAndMerge({sourceDir, answers})
+### configureAndMerge({sourceDir, answers}): result_answers
 
 A shorthand method which does:
 
 1. configure
 2. merge
 
-### configureMergeAndUpdateJSON({sourceDir, answers})
+### configureMergeAndUpdateJSON({sourceDir, answers}): result_answers
 
 
 A shorthand method which does:

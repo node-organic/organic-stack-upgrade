@@ -1,4 +1,6 @@
 const path = require('path')
+const shellExec = require('child_process').exec
+const intersects = require('semver').intersects
 const mergeDirectory = require('./lib/merge-directory')
 const {
   collectPlaceholders,
@@ -8,12 +10,21 @@ const {
   readjson,
   writejson
 } = require('./lib/json')
+const mkdirp = require('mkdirp')
 
 module.exports = class StackUpgrade {
   constructor ({destDir = process.cwd(), name, version}) {
     this.destDir = destDir
     this.name = name
     this.version = version
+  }
+  async ensureDestDir () {
+    return new Promise((resolve, reject) => {
+      mkdirp(this.destDir, (err) => {
+        if (err) return reject(err)
+        resolve()
+      })
+    })
   }
   async configure ({sourceDir, answers}) {
     let placeholders = await collectPlaceholders({sourceDir})
@@ -42,7 +53,12 @@ module.exports = class StackUpgrade {
   }
   async updateJSON () {
     let jsonfilepath = path.join(this.destDir, 'package.json')
-    let json = await readjson(jsonfilepath)
+    let json
+    try {
+      json = await readjson(jsonfilepath)
+    } catch (e) {
+      json = {} // ignore any errors
+    }
     json['stackUpgrades'] = json['stackUpgrades'] || {}
     json['stackUpgrades'][this.name] = this.version
     return writejson(jsonfilepath, json)
@@ -51,5 +67,28 @@ module.exports = class StackUpgrade {
     let resulted_answers = await this.configureAndMerge({sourceDir, answers})
     await this.updateJSON()
     return resulted_answers
+  }
+  async checkUpgrade (name, version) {
+    let jsonfilepath = path.join(this.destDir, 'package.json')
+    let destJson = await readjson(jsonfilepath)
+    let destVersion = destJson['stackUpgrades'][name]
+    if (!destVersion) return false
+    return intersects(version, destVersion)
+  }
+  async exec (cmd) {
+    await this.ensureDestDir()
+    return new Promise((resolve, reject) => {
+      console.log('exec', this.destDir, cmd)
+      let child = shellExec(cmd, {
+        cwd: this.destDir,
+        env: process.env
+      })
+      child.stdout.on('data', chunk => console.log(chunk.toString()))
+      child.stderr.on('data', chunk => console.log(chunk.toString()))
+      child.on('close', (status) => {
+        if (status === 0) return resolve()
+        reject(status)
+      })
+    })
   }
 }

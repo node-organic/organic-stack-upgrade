@@ -45,6 +45,7 @@ file/directory path or file contents
 2. writes resulted files and directories do the `destDir` by using the following merge strategies:
   * for `.json` files it does deep object merge and overrides existing keys
   * for `.gitignore` files it reconstructs the file by appending to the using existing file the content provided from `sourceDir`. It eliminates duplicated lines
+  * for `gitignore` files it outputs `.gitignore` following the same rules as previous point
   * for all other files it just overrides
 
 ```
@@ -108,7 +109,7 @@ stack.checkUpgrade('my-upgrade', '^1.0.0')
 
 ### async exec(cmd)
 
-Helper method to execute `cmd` on `destDir` and to pipe the output to `console`
+Helper method to execute `cmd` on `destDir` and to pipe the output to `console`. Note that `destDir` is created if not exists.
 
 ```
 let stack = new StackUpgrade({

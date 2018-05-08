@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0] - 2018-05-08
+
+## changes
+
+* will throw error when doing deep merge over non .json or gitignore files which
+exists in respective destination
+
+## additions
+
+* added `forceOverride` option to force overriding of non .json or gitignore files
+
 ## [1.2.0] - 2018-04-11
 
 ### fixes and additions

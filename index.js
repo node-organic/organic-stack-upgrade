@@ -42,13 +42,13 @@ module.exports = class StackUpgrade {
     }
     return result_answers
   }
-  async merge ({sourceDir, answers}) {
+  async merge ({sourceDir, answers, forceOverride}) {
     let destDir = this.destDir
-    await mergeDirectory({sourceDir, destDir, answers})
+    await mergeDirectory({sourceDir, destDir, answers, forceOverride})
   }
-  async configureAndMerge ({sourceDir, answers}) {
+  async configureAndMerge ({sourceDir, answers, forceOverride}) {
     let resulted_answers = await this.configure({sourceDir, answers})
-    await this.merge({sourceDir, answers: resulted_answers})
+    await this.merge({sourceDir, answers: resulted_answers, forceOverride})
     return resulted_answers
   }
   async updateJSON () {
@@ -63,8 +63,8 @@ module.exports = class StackUpgrade {
     json['stackUpgrades'][this.name] = this.version
     return writejson(jsonfilepath, json)
   }
-  async configureMergeAndUpdateJSON ({sourceDir, answers}) {
-    let resulted_answers = await this.configureAndMerge({sourceDir, answers})
+  async configureMergeAndUpdateJSON ({sourceDir, answers, forceOverride}) {
+    let resulted_answers = await this.configureAndMerge({sourceDir, answers, forceOverride})
     await this.updateJSON()
     return resulted_answers
   }

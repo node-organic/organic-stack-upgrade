@@ -16,6 +16,17 @@ let stack = new StackUpgrade({
 })
 ```
 
+### constructor({destDir, packagejson})
+
+Constructs class instance with `destDir` property. Fills `name` and `version` properties by reading `packagejson` as .json file
+
+```
+let stack = new StackUpgrade({
+  destDir: process.cwd(),
+  packagejson: __dirname + '/package.json'
+})
+```
+
 ### async configure({sourceDir, answers}): result_answers
 
 Configures stack upgrade. This method does the following:
@@ -125,18 +136,6 @@ stack.exec('echo TEST')
 
 Helper method to create destination directory if not found
 
-### async configureAndMerge({sourceDir, answers}): result_answers
+### async ask(question, defaultValue) 
 
-A shorthand method which does:
-
-1. configure
-2. merge
-
-### async configureMergeAndUpdateJSON({sourceDir, answers}): result_answers
-
-
-A shorthand method which does:
-
-1. configure
-2. merge
-3. updateJSON
+Helper method to use `inquirer` prompt and return the resulted answer

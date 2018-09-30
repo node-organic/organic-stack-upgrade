@@ -3,7 +3,7 @@ const path = require('path')
 const os = require('os')
 const writeFile = require('util').promisify(require('fs').writeFile)
 
-test('StackUpgrade.checkUpgrade', async () => {
+test('override + forceOverride', async () => {
   let DEST_DIR = path.join(os.tmpdir(), 'test-override' + Math.random())
   let stack = new StackUpgrade({
     name: 'test',
@@ -13,7 +13,7 @@ test('StackUpgrade.checkUpgrade', async () => {
   await stack.ensureDestDir()
   await writeFile(path.join(DEST_DIR, 'afile'), '')
   try {
-    await stack.configureMergeAndUpdateJSON({
+    await stack.merge({
       sourceDir: path.join(__dirname, 'seed'),
       answers: {
         'content-placeholder': 'test',
@@ -24,7 +24,7 @@ test('StackUpgrade.checkUpgrade', async () => {
   } catch (e) {
     expect(e.message).toBe('destination file exists')
   }
-  await stack.configureMergeAndUpdateJSON({
+  await stack.merge({
     sourceDir: path.join(__dirname, 'seed'),
     answers: {
       'content-placeholder': 'test',
@@ -33,6 +33,4 @@ test('StackUpgrade.checkUpgrade', async () => {
     },
     forceOverride: true
   })
-  expect(await stack.checkUpgrade('test', '^1.0.0')).toBe(true)
-  expect(await stack.checkUpgrade('test', '^2.0.0')).toBe(false)
 })

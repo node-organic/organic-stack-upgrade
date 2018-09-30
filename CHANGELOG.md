@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.0.0] - 2018-09-20
+
+## breaking
+
+* removed helper methods `configureAndMerge` and `configureMergeAndUpdateJSON`
+* `configure` supports `sourceDirs` **only**
+
+## additions
+
+* `destSubDir` added to `merge` method
+* `ask` method
+* StackUpgrade constructor supports auto version and naming via providing path to existing package.json to read values from
+* test coverage stats
+
+## changes
+
+* `merge` will auto-JSON.stringify provided answers if they are objects/arrays, strings and numbers are left unmodified.
+
 ## [1.3.0] - 2018-05-08
 
 ## changes

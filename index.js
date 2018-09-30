@@ -5,18 +5,21 @@ const mergeDirectory = require('./lib/merge-directory')
 const {
   collectPlaceholders,
   collectAnswers,
+  collectAnswer
 } = require('./lib/placeholders')
 const {
   readjson,
   writejson
 } = require('./lib/json')
 const mkdirp = require('mkdirp')
+const {forEach} = require('p-iteration')
 
 module.exports = class StackUpgrade {
-  constructor ({destDir = process.cwd(), name, version}) {
+  constructor ({destDir = process.cwd(), name, version, packagejson}) {
     this.destDir = destDir
     this.name = name
     this.version = version
+    this.packagejson = packagejson
   }
   async ensureDestDir () {
     return new Promise((resolve, reject) => {
@@ -26,8 +29,15 @@ module.exports = class StackUpgrade {
       })
     })
   }
-  async configure ({sourceDir, answers}) {
-    let placeholders = await collectPlaceholders({sourceDir})
+  async ask (question, defaultValue) {
+    return collectAnswer({question, variableName: 'ask', defaultValue})
+  }
+  async configure ({sourceDirs, answers}) {
+    let placeholders = []
+    await forEach(sourceDirs, async (value) => {
+      let p = await collectPlaceholders({sourceDir: value})
+      placeholders = placeholders.concat(p)
+    })
     // figure out placeholders which has already answers provided
     let result_answers = Object.assign({}, answers)
     for (let i = 0; i < placeholders.length; i++) {
@@ -42,14 +52,12 @@ module.exports = class StackUpgrade {
     }
     return result_answers
   }
-  async merge ({sourceDir, answers, forceOverride}) {
+  async merge ({sourceDir, answers, forceOverride, destSubDir}) {
     let destDir = this.destDir
+    if (destSubDir) {
+      destDir = path.join(destDir, destSubDir)
+    }
     await mergeDirectory({sourceDir, destDir, answers, forceOverride})
-  }
-  async configureAndMerge ({sourceDir, answers, forceOverride}) {
-    let resulted_answers = await this.configure({sourceDir, answers})
-    await this.merge({sourceDir, answers: resulted_answers, forceOverride})
-    return resulted_answers
   }
   async updateJSON () {
     let jsonfilepath = path.join(this.destDir, 'package.json')
@@ -59,14 +67,16 @@ module.exports = class StackUpgrade {
     } catch (e) {
       json = {} // ignore any errors
     }
+    let name = this.name
+    let version = this.version
+    if (this.packagejson) {
+      let packagejson = await readjson(this.packagejson)
+      name = packagejson.name
+      version = packagejson.version
+    }
     json['stackUpgrades'] = json['stackUpgrades'] || {}
-    json['stackUpgrades'][this.name] = this.version
+    json['stackUpgrades'][name] = version
     return writejson(jsonfilepath, json)
-  }
-  async configureMergeAndUpdateJSON ({sourceDir, answers, forceOverride}) {
-    let resulted_answers = await this.configureAndMerge({sourceDir, answers, forceOverride})
-    await this.updateJSON()
-    return resulted_answers
   }
   async checkUpgrade (name, version) {
     let jsonfilepath = path.join(this.destDir, 'package.json')

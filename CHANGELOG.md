@@ -2,38 +2,48 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - 2021-12-11
+
+### fixes
+
+* Changelog
+
+### improvements
+
+* updated packages
+
 ## [2.0.1] - 2018-10-09
 
-## fixes
+### fixes
 
 * `stack.ask` method now properly waits for user input
 
 ## [2.0.0] - 2018-09-20
 
-## breaking
+### breaking
 
 * removed helper methods `configureAndMerge` and `configureMergeAndUpdateJSON`
 * `configure` supports `sourceDirs` **only**
 
-## additions
+### additions
 
 * `destSubDir` added to `merge` method
 * `ask` method
 * StackUpgrade constructor supports auto version and naming via providing path to existing package.json to read values from
 * test coverage stats
 
-## changes
+### changes
 
 * `merge` will auto-JSON.stringify provided answers if they are objects/arrays, strings and numbers are left unmodified.
 
 ## [1.3.0] - 2018-05-08
 
-## changes
+### changes
 
 * will throw error when doing deep merge over non .json or gitignore files which
 exists in respective destination
 
-## additions
+### additions
 
 * added `forceOverride` option to force overriding of non .json or gitignore files
 

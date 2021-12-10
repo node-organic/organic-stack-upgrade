@@ -3,13 +3,13 @@ const path = require('path')
 const os = require('os')
 
 test('configure', async () => {
-  let DEST_DIR = path.join(os.tmpdir(), 'test-exec' + Math.random())
-  let stack = new StackUpgrade({
+  const DEST_DIR = path.join(os.tmpdir(), 'test-exec' + Math.random())
+  const stack = new StackUpgrade({
     name: 'test',
     version: '1.0.0',
     destDir: DEST_DIR
   })
-  let resulted_answers = await stack.configure({
+  const resulted_answers = await stack.configure({
     sourceDirs: [path.join(__dirname, 'seed')],
     answers: {
       'content-placeholder': 'test',

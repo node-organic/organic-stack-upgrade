@@ -4,8 +4,8 @@ const os = require('os')
 const writeFile = require('util').promisify(require('fs').writeFile)
 
 test('override + forceOverride', async () => {
-  let DEST_DIR = path.join(os.tmpdir(), 'test-override' + Math.random())
-  let stack = new StackUpgrade({
+  const DEST_DIR = path.join(os.tmpdir(), 'test-override' + Math.random())
+  const stack = new StackUpgrade({
     name: 'test',
     version: '1.0.0',
     destDir: DEST_DIR

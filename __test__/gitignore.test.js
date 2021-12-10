@@ -14,8 +14,8 @@ const fileExists = async function (filepath) {
 }
 
 test('deepMergeFile', async () => {
-  let DEST_DIR = path.join(os.tmpdir(), 'test-exec' + Math.random())
-  let stack = new StackUpgrade({
+  const DEST_DIR = path.join(os.tmpdir(), 'test-exec' + Math.random())
+  const stack = new StackUpgrade({
     destDir: DEST_DIR
   })
   await stack.ensureDestDir()
